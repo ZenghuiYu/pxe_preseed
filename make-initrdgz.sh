@@ -2,7 +2,14 @@
 #
 # This script is used to put modified 'preseed.cfg' under initrd/ and zip it
 # as the new 'initrd.gz'. This process will be executed frequently.
-# This script should be run as root.
+#
+# Mare sure that:
+#    pwd: /var/lib/tftpboot/ubuntu-installer/amd64
+#
+#    If it's the first time executing this script, there must be an original
+#    'initrd.gz' and no file named 'initrd.img' under pwd.
+#    
+#    This script should be run as root.
 #
 # Author: Yu Zenghui (zenghuiyu96@gmail.com)
 #
