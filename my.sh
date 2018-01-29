@@ -16,9 +16,11 @@ home_path=/opt/openstack
 function add_repo()
 {
 LOG "add repo"
+# Back up original 'sources.list'
 mv /etc/apt/sources.list /etc/apt/sources.list.bak
 echo "deb file:/opt/openstack openstack/" >> /etc/apt/sources.list
 cp /opt/openstack/source/packages.tar.gz /root/
+# Generate 'packages' directory under /opt/
 tar zxf /root/packages.tar.gz -C /opt/
 apt-get update
 }
@@ -30,6 +32,8 @@ function update_config()
 {
 chmod 755 -R $home_path
 cd $home_path/etc
+# For each regular file, replace all "openstack-ip" with local_ip in each line.
+# Actually, no "openstack-ip" was found.
 for i in `find ./ -type f`;do sed -i "s/openstack-ip/$local_ip/g" $i;done
 # TODO: OPENSTACK_PASSWD is exported in function init_env().
 for i in `find ./ -type f`;do sed -i "s/openstack-passwd/$OPENSTACK_PASSWD/g" $i;done
@@ -58,17 +62,26 @@ source /etc/profile
 
 cp $home_path/etc/hosts/hosts-compute /etc/hosts
 sed -i "s/HOSTNAME/$HOSTNAME/" /etc/hosts
+# What's the meaning about it?
 sed -i "s/128.0.0.0/1,0.0.0.0/1" /etc/hosts
 }
 
 #
 # install nova-compute
 #
+# Execute three scripts to install nova-compute.
+# nova-compute-install.sh,nova-compute-conf-install.sh,nova-compute-init.sh
+# 
+# But when to install nova-compute?
+#
 function install_nova_compute()
 {
+# apt-get install ...
 /bin/sh $home_path/scripts/nova/nova-compute-install.sh
+# cp ...
 /bin/sh $home_path/scripts/nova/nova-compute-conf-install.sh 
 sleep 3
+# Do something, e.g. change <MY_IP> ...
 sh $home_path/scripts/nova/nova-compute-init.sh
 sleep 3
 }
