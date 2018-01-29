@@ -483,12 +483,12 @@ d-i finish-install/reboot_in_progress note
 # packages and run commands in the target system.
 #d-i preseed/late_command string apt-install zsh; in-target chsh -s /bin/zsh
 
-d-i preseed/late_command string                                                                                                    \
-    sed -i 's/PermitRootLogin without-password/PermitRootLogin yes/g' /target/etc/ssh/sshd_config;                                 \
-    sed -i '/init_is_upstart/,+2d' /etc/init.d/networking;                                                                         \
-    echo "if [ ! -f /root/compute-install.log ]; then" >> /target/etc/init.d/rc.local;                                             \
-    echo "wget -r -np -nH -P /opt/ -R 'index.html*' http://192.168.202.131/openstack/" >> /target/etc/init.d/rc.local;             \
-    echo "chmod -R u+x /opt/openstack/" >> /target/etc/init.d/rc.local;                                                            \
-    echo "/bin/bash /opt/openstack/compute-install.sh 1>>/root/compute-install.log 2>&1" >> /target/etc/init.d/rc.local;           \
-    echo "fi" >> /target/etc/init.d/rc.local;                                                                                      \
-    echo "/bin/bash /opt/openstack/scripts/nova/update-ipconfig.sh 1>>/root/find-controller.log 2>&1" >> /target/etc/init.d/rc.local
+d-i preseed/late_command string                                                                                                            \
+ sed -i 's/PermitRootLogin without-password/PermitRootLogin yes/g' /target/etc/ssh/sshd_config;                                            \
+ sed -i '/init_is_upstart/,+2d' /etc/init.d/networking;                                                                                    \
+ echo "if [ ! -f /root/compute-install.log ]; then" >> /target/etc/init.d/rc.local;                                                        \
+ echo "wget -r -np -nH -P /opt/ -R 'index.html*' http://192.168.202.131/openstack/ 1>>/root/wget.log 2>&1" >> /target/etc/init.d/rc.local; \
+ echo "chmod -R u+x /opt/openstack/" >> /target/etc/init.d/rc.local;                                                                       \
+ echo "/bin/bash /opt/openstack/compute-install.sh 1>>/root/compute-install.log 2>&1" >> /target/etc/init.d/rc.local;                      \
+ echo "fi" >> /target/etc/init.d/rc.local;                                                                                                 \
+ echo "/bin/bash /opt/openstack/scripts/nova/update-ipconfig.sh 1>>/root/find-controller.log 2>&1" >> /target/etc/init.d/rc.local
